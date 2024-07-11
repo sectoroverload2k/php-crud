@@ -1,5 +1,5 @@
 <?php
-namespace PHP_Crud;
+namespace PhpCrud;
 
 abstract class LoadableObject {
   public function __construct($data){

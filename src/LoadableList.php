@@ -1,6 +1,6 @@
 <?php
 
-namespace PHP_Crud;
+namespace PhpCrud;
 
 abstract class LoadableList extends ArrayObject implements ArrayAccess,JsonSerializable {
 	protected array $items = [];

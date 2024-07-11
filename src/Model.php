@@ -1,5 +1,5 @@
 <?php
 
-namespace PHP_Crud;
+namespace PhpCrud;
 
 abstract class Model {}

@@ -1,7 +1,7 @@
 <?php
-namespace PHP_Crud;
+namespace PhpCrud;
 
-use PHP_Crud\Model;
+use PhpCrud\Model;
 
 abstract class DB_Model extends Model {
   public function __construct(){
