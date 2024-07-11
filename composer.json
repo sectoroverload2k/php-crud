@@ -1,25 +1,21 @@
 {
     "name": "sectoroverload2k/php-crud",
-    "type": "library",
     "description": "PHP Library for CRUD of objects in MySQL",
-		"version": "1.0.2",
+    "type": "library",
     "keywords": ["mysql","crud"],
-    "homepage": "https://github.com/sectoroverload2k/php-crud",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Anthony Linsday",
-            "email": "anthony@linsday.net",
-            "homepage": "http://anthonyl.com",
-            "role": "Developer"
-        }
-    ],
     "require": {
         "php": ">=8.0.0"
     },
+    "license": "MIT",
     "autoload": {
-        "psr-0": {
-            "PHP_Crud\\": "src/"
+        "psr-4": {
+            "PhpCrud\\": "src/"
         }
-    }
+    },
+    "authors": [
+        {
+            "name": "Anthony Linsday",
+            "email": "anthony@linsday.net"
+        }
+    ]
 }
