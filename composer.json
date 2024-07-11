@@ -2,7 +2,7 @@
     "name": "sectoroverload2k/php-crud",
     "type": "library",
     "description": "PHP Library for CRUD of objects in MySQL",
-		"version": "1.0.1",
+		"version": "1.0.2",
     "keywords": ["mysql","crud"],
     "homepage": "https://github.com/sectoroverload2k/php-crud",
     "license": "MIT",
@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-0": {
-            "PHP_Crud": "src"
+            "PHP_Crud\\": "src/"
         }
     }
 }
