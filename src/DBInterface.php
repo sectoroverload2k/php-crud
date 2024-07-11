@@ -2,9 +2,9 @@
 namespace PhpCrud;
 
 interface DBInterface {
-  public function list();
-  public function get($id);
-  public function create($data);
-  public function update($id, $data);
-  public function delete($id);
+  public static function list();
+  public static function get($id);
+  public static function create($data);
+  public static function update($id, $data);
+  public static function delete($id);
 }
