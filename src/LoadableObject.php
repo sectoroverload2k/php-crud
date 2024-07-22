@@ -9,8 +9,11 @@ abstract class LoadableObject {
         $this->$k = $v;
       }
     }
-		if(property_exists(get_called_class(), '_id')){
-			$this->links['self'] = sprintf('%s/%s/%d', BASE_URL, $model::table, $this->_id);
+		if(defined(sprintf("%s::%s", get_called_class(), 'primary_key'))){
+			$key = $this::primary_key;
+			if(property_exists(get_called_class(), $key)){
+				$this->links['self'] = sprintf('%s/%s/%d', BASE_URL, $model::table, $this->$key);
+			}
 		}
   }
   public function __toString(){

@@ -4,33 +4,40 @@ namespace PhpCrud;
 use PhpCrud\Model;
 
 abstract class DB_Model extends Model {
-  public function __construct(){
-  }
 
-	public function __buildSelectAll(){
+	public static function __getPrimaryKey(){
+		$class = get_called_class();
+		return (defined($class::primary_key)) ?? false;
+	}
+
+	public static function __buildSelectAll(){
 		$class = get_called_class();
 		$sql = sprintf('SELECT %s, %s FROM %s', join(',',$class::keys), join(',',$class::attrs), $class::table);
-		if(in_array('location_id', $class::attrs )){
-			$sql .= sprintf(' WHERE (location_id=%d OR location_id IS NULL)', Token::getDefaultLocationId());
-		}
 		return $sql;
 	}
-	public function __buildSelect($id){
+	public static function __buildSelect($id){
 		$class = get_called_class();
-		$sql = sprintf('SELECT %s, %s FROM %s WHERE _id=%d', join(',',$class::keys), join(',',$class::attrs), $class::table , $id);
-		if(in_array('location_id', $class::attrs )){
-			$sql .= sprintf(' AND (location_id=%d OR location_id IS NULL)', Token::getDefaultLocationId());
-		}
+		$sql = sprintf('SELECT %s, %s FROM %s WHERE %s=%d', join(',',$class::keys), join(',',$class::attrs), $class::table, $class::primary_key, $id);
 		return $sql;
 	}
 
-	public function __buildSelectWhere($col, $val){
+	public static function __buildSelectWhere($col, $val){
 		$class = get_called_class();
-		$sql = sprintf('SELECT %s, %s FROM %s WHERE %s=%s', join(',',$class::keys), join(',',$class::attrs), $class::table, $col, $val);
+    $sql = '';
+    if(is_string($col) && is_string($val)){
+  		$sql = sprintf('SELECT %s, %s FROM %s WHERE %s=%s', join(',',$class::keys), join(',',$class::attrs), $class::table, $col, $val);
+    }
+    if( (is_array($col) && is_array($val))  && (count($col)==count($val)) ){
+      $sql = sprintf('SELECT %s, %s FROM %s WHERE ', join(',',$class::keys), join(',',$class::attrs), $class::table);
+      foreach($col as $i => $name){
+        $sql .= sprintf(" %s=%s AND", $name, $val[$i]);
+      }
+      $sql = rtrim($sql, " AND");
+    }
 		return $sql;
 	}
 
-	public function __buildInsert($data){
+	public static function __buildInsert($data){
 		$class = get_called_class();
 		$sql = sprintf('INSERT INTO %s SET ', $class::table);
 
@@ -55,7 +62,7 @@ abstract class DB_Model extends Model {
 		return $sql;
 	}
 
-	public function __buildUpdate($id, $data){
+	public static function __buildUpdate($id, $data){
 		$class = get_called_class();
     $updates = 0;
     $sql = sprintf('UPDATE %s SET ', $class::table);
@@ -83,15 +90,15 @@ abstract class DB_Model extends Model {
 		if(in_array('last_updated',$class::attrs) || in_array('last_updated',$class::restricted)){
 			$sql .= ", last_updated=NOW()";
 		}
-    $sql .= sprintf(' WHERE _id=%d', $id);
+    $sql .= sprintf(' WHERE %s=%d', $class::primary_key, $id);
 
 		return ($updates > 0) ? $sql : false;
 	}
 
 
-	public function __buildDelete($id){
+	public static function __buildDelete($id){
 		$class = get_called_class();
-		$sql = sprintf('DELETE FROM %s WHERE _id=%d', $class::table, $id);
+		$sql = sprintf('DELETE FROM %s WHERE %s=%d', $class::table, $class::primary_key, $id);
 		return $sql;
 	}
 }
