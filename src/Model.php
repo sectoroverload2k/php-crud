@@ -2,4 +2,6 @@
 
 namespace PhpCrud;
 
-abstract class Model {}
+abstract class Model
+{
+}
