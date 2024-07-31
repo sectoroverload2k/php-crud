@@ -62,16 +62,19 @@ abstract class DB_Model extends Model
         foreach($class::attrs as $i => $key) {
             if(isset($data[$key])) {
                 if(in_array($key, array_keys($schema))) {
-                    switch($schema[$key]) {
-                        case 'int':
-                            if(!empty($data[$key])) {
-                                $sql .= sprintf("%s=%d, ", $key, $data[$key]);
-                            }
-                            break;
-                        default:
-                            $sql .= sprintf("%s='%s', ", $key, addslashes($data[$key]));
+                    if(is_null($data[$key])) {
+                        $sql .= sprintf("%s=NULL, ", $key);
+                    } else {
+                        switch($schema[$key]) {
+                            case 'int':
+                                if(!empty($data[$key])) {
+                                    $sql .= sprintf("%s=%d, ", $key, $data[$key]);
+                                }
+                                break;
+                            default:
+                                $sql .= sprintf("%s='%s', ", $key, addslashes($data[$key]));
+                        }
                     }
-
                 } else {
                     $sql .= sprintf('%s="%s", ', $key, addslashes($data[$key]));
                 }
@@ -93,14 +96,18 @@ abstract class DB_Model extends Model
         foreach($class::attrs as $i => $key) {
             if(isset($data[$key]) && !in_array($key, $restricted)) {
                 if(in_array($key, array_keys($schema))) {
-                    switch($schema[$key]) {
-                        case 'int':
-                            if(!empty($data[$key])) {
-                                $sql .= sprintf("%s=%d, ", $key, $data[$key]);
-                            }
-                            break;
-                        default:
-                            $sql .= sprintf("%s='%s', ", $key, addslashes($data[$key]));
+                    if(is_null($data[$key])) {
+                        $sql .= sprintf("%s=NULL, ", $key);
+                    } else {
+                        switch($schema[$key]) {
+                            case 'int':
+                                if(!empty($data[$key])) {
+                                    $sql .= sprintf("%s=%d, ", $key, $data[$key]);
+                                }
+                                break;
+                            default:
+                                $sql .= sprintf("%s='%s', ", $key, addslashes($data[$key]));
+                        }
                     }
                 } else {
                     $sql .= sprintf("%s='%s', ", $key, addslashes($data[$key]));
