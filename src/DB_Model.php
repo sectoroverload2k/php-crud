@@ -10,6 +10,15 @@ abstract class DB_Model extends Model {
 		return (defined($class::primary_key)) ?? false;
 	}
 
+	protected static function __processHooks(&$data){
+		$class = get_called_class();
+		foreach($data as $field => $value){
+			if(method_exists($class, 'hook_'.$field)){
+				$data[$field] = $class::{'hook_'.$field}($value);
+			}
+		}
+	}
+
 	public static function __buildSelectAll(){
 		$class = get_called_class();
 		$sql = sprintf('SELECT %s, %s FROM %s', join(',',$class::keys), join(',',$class::attrs), $class::table);
@@ -39,6 +48,7 @@ abstract class DB_Model extends Model {
 
 	public static function __buildInsert($data){
 		$class = get_called_class();
+		self::__processHooks($data);
 		$sql = sprintf('INSERT INTO %s SET ', $class::table);
 
     $schema = (defined("$class::schema")) ? $class::schema : [];
@@ -64,6 +74,7 @@ abstract class DB_Model extends Model {
 
 	public static function __buildUpdate($id, $data){
 		$class = get_called_class();
+		self::__processHooks($data);
     $updates = 0;
     $sql = sprintf('UPDATE %s SET ', $class::table);
 
