@@ -26,7 +26,7 @@ abstract class LoadableList extends \ArrayObject implements \ArrayAccess, \JsonS
             return $i;
         }, $this->items);
     }
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->items;
     }
