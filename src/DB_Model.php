@@ -94,7 +94,8 @@ abstract class DB_Model extends Model
         $restricted = (defined("$class::restricted")) ? $class::restricted : [];
         $schema = (defined("$class::schema")) ? $class::schema : [];
         foreach($class::attrs as $i => $key) {
-            if(isset($data[$key]) && !in_array($key, $restricted)) {
+            // Prevent updates to the primary key field
+            if(isset($data[$key]) && !in_array($key, $restricted) && $key !== $class::primary_key) {
                 if(in_array($key, array_keys($schema))) {
                     if(is_null($data[$key])) {
                         $sql .= sprintf("%s=NULL, ", $key);
