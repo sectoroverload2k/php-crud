@@ -10,10 +10,8 @@ abstract class LoadableList extends \ArrayObject implements \ArrayAccess, \JsonS
     {
         if (isset($input) && is_array($input)) {
             $this->items = $input;
-            $tmpargs = func_get_args();
-            return call_user_func_array(array('parent', __FUNCTION__), $tmpargs);
         }
-        return call_user_func_array(array('parent', __FUNCTION__), func_get_args());
+        parent::__construct($input, $flags, $iterator_class);
     }
     public function expand($list)
     {
