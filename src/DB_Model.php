@@ -31,7 +31,11 @@ abstract class DB_Model extends Model
     public static function __buildSelect($id)
     {
         $class = get_called_class();
-        $sql = sprintf('SELECT %s, %s FROM %s WHERE %s=%d', join(',', $class::keys), join(',', $class::attrs), $class::table, $class::primary_key, $id);
+        if (is_numeric($id)) {
+            $sql = sprintf('SELECT %s, %s FROM %s WHERE %s=%d', join(',', $class::keys), join(',', $class::attrs), $class::table, $class::primary_key, $id);
+        } else {
+            $sql = sprintf("SELECT %s, %s FROM %s WHERE %s='%s'", join(',', $class::keys), join(',', $class::attrs), $class::table, $class::primary_key, addslashes($id));
+        }
         return $sql;
     }
 
@@ -121,7 +125,13 @@ abstract class DB_Model extends Model
         if(in_array('last_updated', $class::attrs) || in_array('last_updated', $class::restricted)) {
             $sql .= ", last_updated=NOW()";
         }
-        $sql .= sprintf(' WHERE %s=%d', $class::primary_key, $id);
+
+        // Support both integer and string primary keys
+        if (is_numeric($id)) {
+            $sql .= sprintf(' WHERE %s=%d', $class::primary_key, $id);
+        } else {
+            $sql .= sprintf(" WHERE %s='%s'", $class::primary_key, addslashes($id));
+        }
 
         return ($updates > 0) ? $sql : false;
     }
@@ -130,7 +140,11 @@ abstract class DB_Model extends Model
     public static function __buildDelete($id)
     {
         $class = get_called_class();
-        $sql = sprintf('DELETE FROM %s WHERE %s=%d', $class::table, $class::primary_key, $id);
+        if (is_numeric($id)) {
+            $sql = sprintf('DELETE FROM %s WHERE %s=%d', $class::table, $class::primary_key, $id);
+        } else {
+            $sql = sprintf("DELETE FROM %s WHERE %s='%s'", $class::table, $class::primary_key, addslashes($id));
+        }
         return $sql;
     }
 }
